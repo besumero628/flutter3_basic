@@ -34,18 +34,40 @@ class _MyHomePageState extends State<MyHomePage> {
           title: new Text('App Name'),
           ),
         body:
-          new Center(
-            child:
-              new Text(
-              "qWerty1",
-                style: new TextStyle(fontSize:12.0,
-                color: const Color(0xFF000000),
-                fontWeight: FontWeight.w200,
-                fontFamily: "Roboto"),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "One",
+                style: TextStyle(
+                  fontSize: 32.0,
+                  color: const Color(0xff000000),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Roboto",
+                ),
               ),
-    
+              Text(
+                "Two",
+                style: TextStyle(
+                  fontSize: 32.0,
+                  color: const Color(0xff000000),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Roboto",
+                )
+              ),
+              Text(
+                "Three",
+                style: TextStyle(
+                  fontSize: 32.0,
+                  color: const Color(0xff000000),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Roboto",
+                )
+              )
+            ]
           ),
-    
       );
     }
 }
