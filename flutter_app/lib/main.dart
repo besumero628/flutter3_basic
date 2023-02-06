@@ -53,15 +53,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            TextButton(
+            FloatingActionButton(
+              child: Icon(Icons.android),
               onPressed: buttonPressd,
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Icon(
-                  Icons.android,
-                  size: 50.0,
-                )
-              ),
             )
           ],
         ),
