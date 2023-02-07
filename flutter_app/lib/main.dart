@@ -27,14 +27,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static var _message = 'ok';
-  static var _janken = <String>['グー', 'チョキ', 'パー'];
+  static var _message = 'ok.';
+  static final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('App Name'),
+        title: Text('App name'),
       ),
       body: Center(
         child: Column(
@@ -53,10 +53,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            RawMaterialButton(
-              fillColor: Colors.white,
-              elevation: 10.0,
+            Padding(
               padding: EdgeInsets.all(10.0),
+              child: TextField(
+                controller: _controller,
+                style: TextStyle(
+                  fontSize: 28.0,
+                  color: const Color(0xffFF0000),
+                  fontWeight: FontWeight.w400,
+                  fontFamily: "Roboto"
+                ),
+              ),
+            ),
+            ElevatedButton(
               child: Text(
                 "Push me!",
                 style: TextStyle(
@@ -66,17 +75,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontFamily: "Roboto"
                 ),
               ),
-              onPressed: buttonPressd,
+              onPressed: buttonPressed,
             )
           ],
         ),
       ),
     );
   }
-
-  void buttonPressd() {
+  void buttonPressed() {
     setState(() {
-      _message = (_janken..shuffle()).first;
+      _message = 'you said: ' + _controller.text;
     });
   }
 }
