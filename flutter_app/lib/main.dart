@@ -56,30 +56,18 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: EdgeInsets.all(10.0),
             ),
-            DropdownButton<String>(
-              onChanged: popupSelected,
-              value: _selected,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28.0,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Roboto'
+            Align(
+              alignment: Alignment.centerRight,
+              child: PopupMenuButton(
+                onSelected: (String value) => popupSelected(value),
+                itemBuilder: (BuildContext context) => 
+                <PopupMenuEntry<String>>[
+                  const PopupMenuItem(child: const Text("One"), value: "One",),
+                  const PopupMenuItem(child: const Text("Two"), value: "Two",),
+                  const PopupMenuItem(child: const Text("Three"), value: "Three",),
+                ]
+                ),
               ),
-              items: <DropdownMenuItem<String>>[
-                const DropdownMenuItem<String>(
-                  value: 'One',
-                  child: const Text('One'),
-                ),
-                const DropdownMenuItem<String>(
-                  value: 'Two',
-                  child: const Text('Two'),
-                ),
-                const DropdownMenuItem<String>(
-                  value: 'Three',
-                  child: const Text('Three'),
-                )
-              ],
-            )
           ],
         ),
       ),
