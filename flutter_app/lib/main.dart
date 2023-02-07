@@ -28,7 +28,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static var _message = 'ok';
-  static var _checked = false;
+  static var _selected = 'One';
 
   @override
   Widget build(BuildContext context) {
@@ -55,35 +55,41 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Padding(
               padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Checkbox(
-                    value: _checked,
-                    onChanged: checkChanged,
-                  ),
-                  Text(
-                    "Checkbox",
-                    style: TextStyle(
-                      fontSize: 28.0,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: "Roboto"
-                    ),
-                  )
-                ],
+            ),
+            DropdownButton<String>(
+              onChanged: popupSelected,
+              value: _selected,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 28.0,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Roboto'
               ),
+              items: <DropdownMenuItem<String>>[
+                const DropdownMenuItem<String>(
+                  value: 'One',
+                  child: const Text('One'),
+                ),
+                const DropdownMenuItem<String>(
+                  value: 'Two',
+                  child: const Text('Two'),
+                ),
+                const DropdownMenuItem<String>(
+                  value: 'Three',
+                  child: const Text('Three'),
+                )
+              ],
             )
           ],
         ),
-      )
+      ),
     );
   }
-  void checkChanged(bool? value){
+
+  void popupSelected(String? value){
     setState(() {
-      _checked = value!;
-      _message = value ? 'checked!' : 'not checked...';
+      _selected = value ?? 'not selected...';
+      _message = 'select: $_selected';
     });
   }
 }
