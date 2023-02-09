@@ -27,8 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static var _message = 'ok.';
-  static var _value = 0.0;
+  static var _message = 'ok';
 
   @override
   Widget build(BuildContext context) {
@@ -56,22 +55,36 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: EdgeInsets.all(10.0),
             ),
-            Slider(
-              onChanged: sliderChanged,
-              min: 0.0,
-              max: 100.0,
-              divisions: 20,
-              value: _value,
+            Padding(
+              padding: EdgeInsets.all(10.0),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                onPressed: buttonPressd,
+                child: Text(
+                  "tap me!",
+                  style: TextStyle(
+                  fontSize: 32.0,
+                  color: const Color(0xff000000),
+                  fontWeight: FontWeight.w400,
+                  fontFamily: "Roboto"
+                ),
+                ),
+              ),
             )
           ],
         ),
       ),
     );
   }
-  void sliderChanged(double value) {
-    setState(() {
-      _value = value.floorToDouble();
-      _message = 'set value: $_value';
-    });
+  void buttonPressd() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text("Hello"),
+        content: Text("This is sample."),
+      )
+    );
   }
 }
