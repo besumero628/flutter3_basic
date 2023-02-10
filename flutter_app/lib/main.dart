@@ -28,6 +28,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static var _message = 'ok.';
+  static var _index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -48,22 +49,51 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.all(20.0),
 
             children: <Widget>[
-              Text(
-                'First item',
-                style: TextStyle(fontSize: 24.0),
+              ListTile(
+                leading: const Icon(Icons.android, size: 32,),
+                title: const Text(
+                  'first item',
+                  style: TextStyle(fontSize: 28),
+                ),
+                selected: _index == 1,
+                onTap: () {
+                  _index = 1;
+                  tapTile();
+                },
               ),
-              Text(
-                'Second item',
-                style: TextStyle(fontSize: 24.0),
+              ListTile(
+                leading: const Icon(Icons.favorite, size: 32,),
+                title: const Text(
+                  'second item',
+                  style: TextStyle(fontSize: 28),
+                ),
+                selected: _index == 2,
+                onTap: () {
+                  _index = 2;
+                  tapTile();
+                },
               ),
-              Text(
-                'Third item',
-                style: TextStyle(fontSize: 24.0),
+              ListTile(
+                leading: const Icon(Icons.home, size: 32,),
+                title: const Text(
+                  'third item',
+                  style: TextStyle(fontSize: 28),
+                ),
+                selected: _index == 3,
+                onTap: () {
+                  _index = 3;
+                  tapTile();
+                },
               ),
             ],
           )
         ],
       ),
     );
+  }
+  void tapTile() {
+    setState(() {
+      _message = 'you tapped: No, $_index';
+    });
   }
 }
