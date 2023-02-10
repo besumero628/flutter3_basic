@@ -19,47 +19,71 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class FirstScreen extends StatelessWidget {
+class FirstScreen extends StatefulWidget {
+  FirstScreen({Key? key}) : super(key: key);
+
+  @override
+  _FirstScreenState createState() => _FirstScreenState();
+}
+
+class _FirstScreenState extends State<FirstScreen> {
+  static final _controller = TextEditingController();
+  static var _input = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text('Home'),
       ),
-      body: Center(
-        child: Container(
-          child: const Text(
+      body: Column(
+        children: <Widget>[
+          const Text(
             'Home Screen',
-            style:  const TextStyle(fontSize: 32.0),
+            style: const TextStyle(fontSize: 32.0),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: TextField(
+              controller: _controller,
+              style: const TextStyle(fontSize: 28.0),
+              onChanged: changeField,
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
         items: <BottomNavigationBarItem>[
           const BottomNavigationBarItem(
             label: 'Home',
-            icon: const Icon(Icons.home, size: 32,),
+            icon: const Icon(Icons.home)
           ),
           const BottomNavigationBarItem(
             label: 'next',
-            icon: const Icon(Icons.navigate_next, size: 32,),
+            icon: const Icon(Icons.navigate_next)
           )
         ],
-        onTap: (int value) {
+        onTap: (int value) => {
           if (value == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SecondScreen())
-            );
+              MaterialPageRoute(builder: (context) => SecondScreen(_input))
+            )
           }
         },
       ),
     );
   }
+
+  void changeField(String val) => _input = val;
 }
 
 class SecondScreen extends StatelessWidget {
+  final String _value;
+
+  SecondScreen(this._value);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,21 +91,21 @@ class SecondScreen extends StatelessWidget {
         title: const Text("Next"),
       ),
       body: Center(
-        child: const Text(
-          'Next Screen',
+        child: Text(
+          'you typed: "$_value".',
           style: const TextStyle(fontSize: 32.0),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
         items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             label: 'prev',
-            icon: const Icon(Icons.navigate_before, size: 32,)
+            icon: const Icon(Icons.navigate_before),
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             label: '?',
-            icon: const Icon(Icons.android, size: 32,)
+            icon: const Icon(Icons.android),
           ),
         ],
         onTap: (int value) {
