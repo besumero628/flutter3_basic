@@ -1,166 +1,94 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(new MyApp());
+  runApp(MyApp());
 }
-class MyApp extends StatelessWidget {
 
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Generated App',
-      theme: new ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.blue,
-        primaryColor: const Color(0xFF2196f3),
-        accentColor: const Color(0xFF2196f3),
-        canvasColor: const Color(0xFFfafafa),
+        primaryColor: const Color(0xff2196f3),
+        canvasColor: const Color(0xfffafafa),
       ),
-      home: new MyHomePage(),
+      home: FirstScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
-  @override
-  _MyHomePageState createState() => new _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My App'),
+        title: const Text('Home'),
       ),
-
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              color: Colors.blue,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'One',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'Two',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.blue,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'Three',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'Four',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.blue,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'Five',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.blue,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'One',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'Two',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.blue,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'Three',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'Four',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.blue,
-              height: 120.0,
-              child: const Center(
-                child: const Center(
-                  child: Text(
-                    'Five',
-                    style: const TextStyle(fontSize: 32.0),
-                  ),
-                ),
-              ),
-            ),
-          ],
+      body: Center(
+        child: Container(
+          child: const Text(
+            'Home Screen',
+            style:  const TextStyle(fontSize: 32.0),
+          ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1,
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
+            label: 'Home',
+            icon: const Icon(Icons.home, size: 32,),
+          ),
+          const BottomNavigationBarItem(
+            label: 'next',
+            icon: const Icon(Icons.navigate_next, size: 32,),
+          )
+        ],
+        onTap: (int value) {
+          if (value == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SecondScreen())
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Next"),
+      ),
+      body: Center(
+        child: const Text(
+          'Next Screen',
+          style: const TextStyle(fontSize: 32.0),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
+            label: 'prev',
+            icon: const Icon(Icons.navigate_before, size: 32,)
+          ),
+          const BottomNavigationBarItem(
+            label: '?',
+            icon: const Icon(Icons.android, size: 32,)
+          ),
+        ],
+        onTap: (int value) {
+          if (value == 0) {
+            Navigator.pop(context);
+          }
+        },
       ),
     );
   }
