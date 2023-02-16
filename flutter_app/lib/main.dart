@@ -50,14 +50,17 @@ class MyPainter extends CustomPainter {
 
     p.style = PaintingStyle.fill;
     p.color = Color.fromARGB(150, 0, 200, 255);
-    Rect r = Rect.fromLTWH(50.0, 50.0, 150.0, 150.0);
-    canvas.drawRect(r, p);
+    Offset ctr = Offset(100.0, 100.0);
+    canvas.drawCircle(ctr, 75.0, p);
 
     p.style = PaintingStyle.stroke;
     p.color = Color.fromARGB(150, 200, 0, 255);
     p.strokeWidth = 10.0;
-    r = Rect.fromLTWH(100.0, 100.0, 150.0, 150.0);
-    canvas.drawRect(r, p);
+    Rect r = Rect.fromLTWH(100.0, 50.0, 200.0, 150.0);
+    canvas.drawOval(r, p);
+
+    r = Rect.fromLTWH(50.0, 100.0, 150.0, 200.0);
+    canvas.drawOval(r, p);
   }
 
   @override
