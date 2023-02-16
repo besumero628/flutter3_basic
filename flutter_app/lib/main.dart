@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 void main() {
@@ -28,42 +30,54 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static ui.Image? _img = null;
+  static bool _flg = false;
+
+  Future<void> loadAssetImage(String fname) async {
+    final bd = await rootBundle.load("assets/images/$fname");
+    final Uint8List u8lst = await Uint8List.view(bd.buffer);
+    final codec = await ui.instantiateImageCodec(u8lst);
+    final frame_Info = await codec.getNextFrame();
+    _img = frame_Info.image;
+    setState(() {
+      _flg = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    loadAssetImage('image.jpg');
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      appBar: AppBar(
-        title: Text('App Name', style: TextStyle(fontSize: 30.0),),
-      ),
-      body: Container(
-        child: CustomPaint(
-          painter: MyPainter(),
+      appBar:  AppBar(
+        title: Text(
+            'App Name',
+            style: TextStyle(fontSize: 30.0),
+          ),
         ),
-      ),
-    );
+        body: Container(
+          child: CustomPaint(
+            painter: MyPainter(_img),
+          ),
+        ),
+      );
   }
 }
 
 class MyPainter extends CustomPainter {
+  ui.Image? _img = null;
+
+  MyPainter(this._img);
+
   @override
   void paint(Canvas canvas, Size size) {
     Paint p = Paint();
 
-    ui.ParagraphBuilder builder = ui.ParagraphBuilder(
-      ui.ParagraphStyle(textDirection: TextDirection.ltr),
-    )
-      ..pushStyle(ui.TextStyle(color: Colors.red, fontSize: 48.0))
-      ..addText('Hello! ')
-      ..pushStyle(ui.TextStyle(color: Colors.blue[700], fontSize: 30.0))
-      ..addText('This is a sample of paragraph text. ')
-      ..pushStyle(ui.TextStyle(color: Colors.blue[200], fontSize: 30.0))
-      ..addText('You can draw MULTI-FONT text!');
-
-      ui.Paragraph paragraph = builder.build()
-        ..layout(ui.ParagraphConstraints(width: 300.0));
-
-        Offset off = Offset(50.0, 50.0);
-        canvas.drawParagraph(paragraph, off);
+    Offset off = Offset(50.0, 50.0);
+    if (_img != null) {
+      canvas.drawImage(_img!, off, p);
+    }
   }
 
   @override
