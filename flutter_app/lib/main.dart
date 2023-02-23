@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -63,10 +64,24 @@ class MyPainter extends CustomPainter {
     r = Rect.fromLTWH(125.0, 125.0, 175.0, 175.0);
     path.addOval(r);
 
+    canvas.save();
+
     Paint p = Paint();
     p.color = Color.fromARGB(150, 255, 0, 0);
     p.style = PaintingStyle.fill;
     canvas.drawPath(path, p);
+
+    canvas.translate(0.0, 100.0);
+    p.color = Color.fromARGB(150, 0, 0, 255);
+    canvas.drawPath(path, p);
+
+    p.color = Color.fromARGB(150, 0, 255, 0);
+    canvas.rotate(-0.5 * pi);
+    canvas.translate(-500, 50.0);
+    canvas.scale(1 * 1.5);
+    canvas.drawPath(path, p);
+
+    canvas.restore();
   }
 
   @override
