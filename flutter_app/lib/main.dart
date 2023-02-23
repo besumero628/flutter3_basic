@@ -31,10 +31,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static List<Offset> _points = [];
+  static double _value = 0;
+  static double _opaq = 0;
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
   }
 
@@ -43,42 +44,75 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        title: Text('App Name', style: TextStyle(fontSize: 30.0),),
-      ),
-      body: Center(
-        child: Listener(
-          onPointerDown: _addPoint,
-          child: CustomPaint(
-            painter: MyPainter(_points),
-            child: Center(),
-          ),
+        title: Text(
+          'App Name',
+          style: TextStyle(fontSize: 30.0),
         ),
+      ),
+      body: Column(
+        children: [
+          Padding(padding: EdgeInsets.all(10)),
+          Container(
+            width: 300,
+            height: 300,
+            child: CustomPaint(
+              painter: MyPainter(_value, _opaq.toInt()),
+              child: Center(),
+            ),
+          ),
+          Slider(
+            min: 0.0,
+            max: 300.0,
+            value: _value,
+            onChanged: _changeVal,
+          ),
+          Slider(
+            min: 0.0,
+            max: 255.0,
+            value: _opaq,
+            onChanged: _changeOpaq,
+          ),
+        ],
       ),
     );
   }
 
-  void _addPoint(PointerDownEvent event) {
+  void _changeVal(double value) {
     setState(() {
-      _points.add(event.localPosition);
+      _value = value;
+    });
+  }
+  void _changeOpaq(double value) {
+    setState(() {
+      _opaq = value;
     });
   }
 }
 
-class MyPainter extends CustomPainter {
-  final List<Offset> _points;
 
-  MyPainter(this._points);
+class MyPainter extends CustomPainter {
+  final double _value;
+  final int _opaq;
+
+  MyPainter(this._value, this._opaq);
 
   @override
   void paint(Canvas canvas, Size size) {
     Paint p = Paint();
 
     p.style = PaintingStyle.fill;
-    p.color = Color.fromARGB(100, 0, 200, 100);
-    for (var pos in _points) {
-      Rect r = Rect.fromLTWH(pos.dx - 25, pos.dy -25, 50.0, 50.0);
-      canvas.drawOval(r, p);
-    }
+    p.color = Color.fromARGB(_opaq, 0, 200, 100);
+    Rect r = Rect.fromLTWH(
+      (size.width - _value) / 2,
+      (size.height - _value) / 2,
+      _value, _value
+    );
+    canvas.drawOval(r, p);
+
+    r = Rect.fromLTWH(0, 0, size.width, size.height);
+    p.style = PaintingStyle.stroke;
+    p.color = Color.fromARGB(255, 100, 100, 100);
+    canvas.drawRect(r, p);
   }
 
   @override
