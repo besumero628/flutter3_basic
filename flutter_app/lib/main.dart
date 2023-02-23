@@ -30,60 +30,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static ui.Image? _img = null;
-  static bool _flg = false;
-
-  Future<void> loadAssetImage(String fname) async {
-    final bd = await rootBundle.load("assets/images/$fname");
-    final Uint8List u8lst = await Uint8List.view(bd.buffer);
-    final codec = await ui.instantiateImageCodec(u8lst);
-    final frame_Info = await codec.getNextFrame();
-    _img = frame_Info.image;
-    setState(() {
-      _flg = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    loadAssetImage('image.jpg');
-
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      appBar:  AppBar(
+      appBar: AppBar(
         title: Text(
-            'App Name',
-            style: TextStyle(fontSize: 30.0),
+          'App Name',
+          style: TextStyle(
+            fontSize: 30.0
           ),
         ),
-        body: Container(
-          child: CustomPaint(
-            painter: MyPainter(_img),
-          ),
+      ),
+      body: Container(
+        child: CustomPaint(
+          painter: MyPainter(),
         ),
-      );
+      ),
+    );
   }
 }
 
 class MyPainter extends CustomPainter {
-  ui.Image? _img = null;
-
-  MyPainter(this._img);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint p = Paint();
-    final _img = this._img;
+    Path path = Path();
+    Rect r = Rect.fromLTWH(50.0, 50.0, 75.0, 75.0);
+    path.addOval(r);
+    r = Rect.fromLTWH(75.0, 75.0, 125.0, 125.0);
+    path.addOval(r);
+    r = Rect.fromLTWH(125.0, 125.0, 175.0, 175.0);
+    path.addOval(r);
 
-    if (_img != null) {
-      Rect r0 = Rect.fromLTWH(0.0, 0.0, _img.width.toDouble(), _img.height.toDouble());
-      Rect r = Rect.fromLTWH(50.0, 50.0, 100.0, 100.0);
-      canvas.drawImageRect(_img, r0, r, p);
-      r = Rect.fromLTWH(50.0, 250.0, 200.0, 100.0);
-      canvas.drawImageRect(_img, r0, r, p);
-      r = Rect.fromLTWH(250.0, 50.0, 100.0, 200.0);
-      canvas.drawImageRect(_img, r0, r, p);
-    }
+    Paint p = Paint();
+    p.color = Color.fromARGB(150, 255, 0, 0);
+    p.style = PaintingStyle.fill;
+    canvas.drawPath(path, p);
   }
 
   @override
