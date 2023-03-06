@@ -46,15 +46,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         padding: EdgeInsets.all(20),
         child: Column(
           children: [
-            AnimatedAlign(
-              alignment: flg ? Alignment.topLeft : Alignment.topRight,
+            AnimatedDefaultTextStyle(
               duration: const Duration(seconds: 1),
-              child: Container(
-                color: Colors.red,
-                width: 100,
-                height: 100,
+              style: TextStyle(
+                fontSize: flg ? 48 : 96,
+                fontWeight: FontWeight.bold,
+                color: flg ? Colors.red : Colors.blue
               ),
-              curve: Curves.linear,
+              child: Text("Hello Flutter!"),
             )
           ],
         ),
