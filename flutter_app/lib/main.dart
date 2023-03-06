@@ -30,7 +30,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   bool flg = false;
 
   @override
@@ -44,16 +45,17 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
-        child: Column(
+        child: Stack(
           children: [
-            AnimatedDefaultTextStyle(
-              duration: const Duration(seconds: 1),
-              style: TextStyle(
-                fontSize: flg ? 48 : 96,
-                fontWeight: FontWeight.bold,
-                color: flg ? Colors.red : Colors.blue
+            AnimatedPositioned(
+              duration: Duration(seconds: 3),
+              top: flg ? 300 : 0,
+              left: flg ? 0 : 300,
+              child: Container(
+                color: Colors.red,
+                width: 100,
+                height: 100,
               ),
-              child: Text("Hello Flutter!"),
             )
           ],
         ),
@@ -69,7 +71,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     );
   }
 }
-
 
 class MyPainter extends CustomPainter {
   final double value;
