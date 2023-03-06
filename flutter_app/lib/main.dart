@@ -31,47 +31,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
-  late Animation<double> animation;
-  late AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(
-      duration: const Duration(seconds: 3),
-      vsync: this
-    );
-    animation = Tween<double>(begin: 0, end: pi*2).animate(controller)..addListener(() {
-      setState(() {
-      });
-    });
-    controller.repeat(reverse: false);
-  }
+  bool flg = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         title: Text(
           'App Name',
           style: TextStyle(fontSize: 30.0),
         ),
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.all(20),
         child: Column(
           children: [
-            Padding(padding: EdgeInsets.all(10)),
-            Container(
-              width: 300,
-              height: 300,
-              child: CustomPaint(
-                painter: MyPainter(animation.value),
-                child: Center(),
+            AnimatedAlign(
+              alignment: flg ? Alignment.topLeft : Alignment.topRight,
+              duration: const Duration(seconds: 1),
+              child: Container(
+                color: Colors.red,
+                width: 100,
+                height: 100,
               ),
+              curve: Curves.linear,
             )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            flg = !flg;
+          });
+        },
+        child: const Icon(Icons.star),
       ),
     );
   }
