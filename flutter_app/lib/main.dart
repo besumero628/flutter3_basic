@@ -45,17 +45,19 @@ class _MyHomePageState extends State<MyHomePage>
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
-        child: Stack(
+        child: Column(
           children: [
-            AnimatedPositioned(
-              duration: Duration(seconds: 3),
-              top: flg ? 300 : 0,
-              left: flg ? 0 : 300,
-              child: Container(
-                color: Colors.red,
-                width: 100,
-                height: 100,
+            AnimatedCrossFade(
+              duration: const Duration(seconds: 1),
+              firstChild: const FlutterLogo(
+                style: FlutterLogoStyle.horizontal,
+                size: 300.0,
               ),
+              secondChild: const FlutterLogo(
+                style: FlutterLogoStyle.stacked,
+                size: 300.0,
+              ),
+              crossFadeState: flg ? CrossFadeState.showFirst : CrossFadeState.showSecond,
             )
           ],
         ),
