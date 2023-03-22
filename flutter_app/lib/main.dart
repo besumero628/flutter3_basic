@@ -1,102 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'dart:math';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main()=> runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Generated App',
+      title: 'Genarated App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: const Color(0xff2196f3),
         canvasColor: const Color(0xfffafafa),
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  bool flg = false;
+class _MyHomePageState extends State<MyHomePage> {
+  final _controller = TextEditingController();
+  final _fname = 'assets/documents/data.txt';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'App Name',
-          style: TextStyle(fontSize: 30.0),
-        ),
+        title: const Text('Home'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          children: [
-            AnimatedContainer(
-              duration: const Duration(seconds: 1),
-              color: flg ? Colors.red : Colors.yellow,
-              width: flg ? 100: 300,
-              height: flg ? 300 : 100,
+          children: <Widget>[
+            const Text(
+              'RESORCE ACCESS',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: ui.FontWeight.w500
+              ),
+            ),
+            const Padding(padding: EdgeInsets.all(10.0)),
+            TextField(
+              controller: _controller,
+              style: const TextStyle(fontSize: 24),
+              minLines: 1,
+              maxLines: 5,
             )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        child: const  Icon(Icons.open_in_new),
+        onPressed: () async {
+          final value = await loadIt();
           setState(() {
-            flg = !flg;
+            _controller.text = value;
           });
-        },
-        child: const Icon(Icons.star),
+          showDialog(
+            context: context, 
+            builder: (BuildContext context) => 
+            const AlertDialog(
+              title: Text("loaded!"),
+              content: Text("load message from Asset"),
+            )
+          );
+        }
+        
       ),
     );
   }
-}
 
-class MyPainter extends CustomPainter {
-  final double value;
-
-  MyPainter(this.value);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint p = Paint();
-    canvas.save();
-
-    p.style = PaintingStyle.fill;
-    p.color = Color.fromARGB(100, 255, 0, 255);
-    Rect r = Rect.fromLTWH(0, 0, 250, 250);
-    canvas.translate(150, 250);
-    canvas.rotate(value);
-    canvas.translate(-125, -125);
-    canvas.drawRect(r, p);
-
-    canvas.restore();
-    p.style = PaintingStyle.stroke;
-    p.strokeWidth = 25;
-    p.color = Color.fromARGB(100, 0, 255, 255);
-    r = Rect.fromLTWH(0, 0, 250, 250);
-    canvas.translate(150, 250);
-    canvas.rotate(value * -1);
-    canvas.translate(-125, -125);
-    canvas.drawRect(r, p);
+  Future<String> getDataAssets(String path) async {
+    return await rootBundle.loadString(path);
   }
 
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  Future<String> loadIt() async {
+    try {
+      final res = await getDataAssets(_fname);
+      return res;
+    } catch (e) {
+      return '*** no data ***';
+    }
+  }
 }
