@@ -1,9 +1,18 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+import 'dart:convert';
+import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main()=> runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -63,14 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         child: const  Icon(Icons.open_in_new),
         onPressed: () {
-          getData();
-          showDialog(
-            context: context, 
-            builder: (BuildContext context) => const  AlertDialog(
-              title: Text("loaded!"),
-              content: Text("get context from URI"),
-            )
-          );
+           fire();
         },
       ),
     );
@@ -82,5 +84,19 @@ class _MyHomePageState extends State<MyHomePage> {
     HttpClientResponse response = await request.close();
     final value = await response.transform(utf8.decoder).join();
     _controller.text = value;
+  }
+
+  void fire() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final snapshot = await firestore.collection('mydata').get();
+
+    var msg = '';
+    snapshot.docChanges.forEach((element) {
+      final name = element.doc.get('name');
+      final mail = element.doc.get('mail');
+      final age = element.doc.get('age');
+      msg += "${name} (${age}) <${mail}>\n";
+    });
+    _controller.text = msg;
   }
 }
