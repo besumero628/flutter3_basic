@@ -87,16 +87,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fire() async {
+    var msg = _controller.text;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final snapshot = await firestore.collection('mydata').get();
+    final snapshot = await firestore.collection('mydata').where('name', isEqualTo: msg).get();
 
-    var msg = '';
     snapshot.docChanges.forEach((element) {
       final name = element.doc.get('name');
       final mail = element.doc.get('mail');
       final age = element.doc.get('age');
-      msg += "${name} (${age}) <${mail}>\n";
+      msg += "\n${name} (${age}) <${mail}>";
     });
+
     _controller.text = msg;
   }
 }
