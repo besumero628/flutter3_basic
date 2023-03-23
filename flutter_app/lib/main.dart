@@ -89,7 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void fire() async {
     var msg = _controller.text;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final snapshot = await firestore.collection('mydata').where('name', isEqualTo: msg).get();
+    final snapshot = await firestore.collection('mydata')
+      .orderBy('name', descending: false)
+      .startAt([msg])
+      .endAt([msg + '\uf8ff'])
+      .get();
 
     snapshot.docChanges.forEach((element) {
       final name = element.doc.get('name');
