@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         child: const  Icon(Icons.open_in_new),
         onPressed: () {
-           addDoc();
+           doSignin();
         },
       ),
     );
@@ -120,5 +122,23 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     _controller.text = msg;
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  void doSignin() {
+    signInWithGoogle().then((value) {
+      if (value.user != null) {
+        fire();
+      }
+    });
   }
 }
