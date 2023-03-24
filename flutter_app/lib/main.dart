@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         child: const  Icon(Icons.open_in_new),
         onPressed: () {
-           fire();
+           addDoc();
         },
       ),
     );
@@ -86,13 +86,30 @@ class _MyHomePageState extends State<MyHomePage> {
     _controller.text = value;
   }
 
+  @override
+  void initState() {
+    super.initState();
+    fire();
+  }
+
+  void addDoc() async {
+    var msg = _controller.text;
+    final input = msg.split(',');
+    final data = {
+      'name': input[0],
+      'mail': input[1],
+      'age': input[2]
+    };
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final snapshot = await firestore.collection('mydata').add(data);
+    fire();
+  }
+
   void fire() async {
     var msg = _controller.text;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final snapshot = await firestore.collection('mydata')
       .orderBy('name', descending: false)
-      .startAt([msg])
-      .endAt([msg + '\uf8ff'])
       .get();
 
     snapshot.docChanges.forEach((element) {
