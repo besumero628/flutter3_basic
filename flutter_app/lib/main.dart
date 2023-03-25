@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/services.dart';
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,7 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class SampleGame extends FlameGame with HasKeyboardHandlerComponents {
+class SampleGame extends FlameGame with HasTappableComponents {
+  late final MySprite _sprite;
 
   @override
   Color backgroundColor() => const Color(0xffCCCCFF);
@@ -49,13 +51,19 @@ class SampleGame extends FlameGame with HasKeyboardHandlerComponents {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    add(MySprite(Vector2(100, 100)));
+    _sprite = MySprite(Vector2(100, 100));
+    add(_sprite);
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    _sprite._position = event.canvasPosition;
+    super.onTapDown(event);
   }
 }
 
-class MySprite extends SpriteComponent with KeyboardHandler {
+class MySprite extends SpriteComponent with TapCallbacks {
   late Vector2 _position;
-  late Vector2 _delta;
 
   MySprite(this._position): super();
 
@@ -65,36 +73,18 @@ class MySprite extends SpriteComponent with KeyboardHandler {
     sprite = await Sprite.load('chara.png');
     position = _position;
     size = Vector2(100, 100);
-    _delta = Vector2.zero();
+    anchor = Anchor.center;
   }
 
   @override
   void update(double delta) {
-    position += _delta * delta * 100;
+    final d = (_position - position) /20;
+    position += d * delta *100;
     super.update(delta);
   }
 
-  @override
-  bool onKeyEvent(
-    RawKeyEvent event,
-    Set<LogicalKeyboardKey> keysPressed,
-  ) {
-    if (event is RawKeyUpEvent) {
-      _delta = Vector2.zero();
-    }
-    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
-      _delta.x = -1;
-    }
-    if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
-      _delta.x = 1;
-    }
-    if (keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
-      _delta.y = -1;
-    }
-    if (keysPressed.contains(LogicalKeyboardKey.arrowDown)) {
-      _delta.y = 1;
-    }
-
-    return true;
+  void onTapDown(TapDownEvent event) {
+    _position = Vector2.zero();
+    position = Vector2.zero();
   }
 }
