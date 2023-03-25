@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class SampleGame extends FlameGame with KeyboardEvents {
+class SampleGame extends FlameGame with HasKeyboardHandlerComponents {
 
   @override
   Color backgroundColor() => const Color(0xffCCCCFF);
@@ -53,8 +53,9 @@ class SampleGame extends FlameGame with KeyboardEvents {
   }
 }
 
-class MySprite extends SpriteComponent {
-  late final Vector2 _position;
+class MySprite extends SpriteComponent with KeyboardHandler {
+  late Vector2 _position;
+  late Vector2 _delta;
 
   MySprite(this._position): super();
 
@@ -64,10 +65,36 @@ class MySprite extends SpriteComponent {
     sprite = await Sprite.load('chara.png');
     position = _position;
     size = Vector2(100, 100);
+    _delta = Vector2.zero();
   }
 
   @override
   void update(double delta) {
+    position += _delta * delta * 100;
     super.update(delta);
+  }
+
+  @override
+  bool onKeyEvent(
+    RawKeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    if (event is RawKeyUpEvent) {
+      _delta = Vector2.zero();
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
+      _delta.x = -1;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
+      _delta.x = 1;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
+      _delta.y = -1;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowDown)) {
+      _delta.y = 1;
+    }
+
+    return true;
   }
 }
