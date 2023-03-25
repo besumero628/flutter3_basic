@@ -1,144 +1,84 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
-import 'dart:convert';
-import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flame/input.dart';
+import 'package:flutter/services.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Genarated App',
+      title: 'Generated App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: const Color(0xff2196f3),
         canvasColor: const Color(0xfffafafa),
       ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _controller = TextEditingController();
-  static const host = 'baconipsum.com';
-  static const path = '/api/?type=meat-and-filler&paras=1&format=text';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text('My App'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: <Widget>[
-            const Text(
-              'INTERNET ACCESS',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: ui.FontWeight.w500
-              ),
-            ),
-            const Padding(padding: EdgeInsets.all(10.0)),
-            TextField(
-              controller: _controller,
-              style: const TextStyle(fontSize: 24),
-              minLines: 1,
-              maxLines: 5,
-            ),
-            Padding(padding: EdgeInsets.all(10.0)),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const  Icon(Icons.open_in_new),
-        onPressed: () {
-           doSignin();
-        },
-      ),
+      body: GameWidget(game: SampleGame()),
     );
   }
+}
 
-  void getData() async {
-    var http = await HttpClient();
-    HttpClientRequest request = await http.get(host, 80, path);
-    HttpClientResponse response = await request.close();
-    final value = await response.transform(utf8.decoder).join();
-    _controller.text = value;
+class SampleGame extends FlameGame with KeyboardEvents {
+  late final paint;
+  late Vector2 _loc;
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    paint = Paint();
+    paint.color = Colors.blue;
+    _loc = Vector2(100, 100);
   }
 
   @override
-  void initState() {
-    super.initState();
-    fire();
+  void render(Canvas canvas) {
+    super.render(canvas);
+    final rect = Rect.fromLTWH(_loc.x, _loc.y, 100, 100);
+    canvas.drawOval(rect, paint);
   }
 
-  void addDoc() async {
-    var msg = _controller.text;
-    final input = msg.split(',');
-    final data = {
-      'name': input[0],
-      'mail': input[1],
-      'age': input[2]
-    };
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final snapshot = await firestore.collection('mydata').add(data);
-    fire();
-  }
+  @override
+  KeyEventResult onKeyEvent(
+    RawKeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    final _dpos = Vector2(0, 0);
 
-  void fire() async {
-    var msg = _controller.text;
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final snapshot = await firestore.collection('mydata')
-      .orderBy('name', descending: false)
-      .get();
-
-    snapshot.docChanges.forEach((element) {
-      final name = element.doc.get('name');
-      final mail = element.doc.get('mail');
-      final age = element.doc.get('age');
-      msg += "\n${name} (${age}) <${mail}>";
-    });
-
-    _controller.text = msg;
-  }
-
-  Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken
-    );
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  void doSignin() {
-    signInWithGoogle().then((value) {
-      if (value.user != null) {
-        fire();
-      }
-    });
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
+      _dpos.x = -10;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
+      _dpos.x = 10;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
+      _dpos.y = -10;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowDown)) {
+      _dpos.y = 10;
+    }
+    _loc += _dpos;
+    return KeyEventResult.handled;
   }
 }
